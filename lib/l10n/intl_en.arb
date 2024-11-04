@@ -1,0 +1,19 @@
+{
+  "@@locale": "en",
+  "appTitle": "GARANTYOL",
+  "noProducts": "No products added yet.",
+  "settings": "Settings",
+  "deleteConfirmation": "Are you sure you want to delete this product?",
+  "yes": "Yes",
+  "no": "No",
+  "edit": "Edit",
+  "add": "Add",
+  "delete": "Delete",
+  "update": "Update",
+  "productDetail":"Product Detail"
+  "productName": "Product Name",
+  "brand": "Brand",
+  "model": "Model",
+  "purchaseDate": "Purchase Date (DD/MM/YYYY)",
+  "warrantyEndDate": "Warranty End Date (DD/MM/YYYY)"
+}

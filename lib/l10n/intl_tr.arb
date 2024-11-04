@@ -1,0 +1,19 @@
+{
+  "@@locale": "tr",
+  "appTitle": "GARANTYOL",
+  "noProducts": "Henüz ürün eklenmedi.",
+  "settings": "Ayarlar",
+  "deleteConfirmation": "Bu ürünü silmek istediğinize emin misiniz?",
+  "yes": "Evet",
+  "no": "Hayır",
+  "edit": "Düzenle",
+  "add": "Ekle"
+  "delete": "Sil",
+  "update": "Güncelle",
+  "productDetail": "Ürün Detayları"
+  "productName": "Ürün Adı",
+  "brand": "Marka",
+  "model": "Model",
+  "purchaseDate": "Satın Alma Tarihi (GG/AA/YYYY)",
+  "warrantyEndDate": "Garanti Bitiş Tarihi (GG/AA/YYYY)"
+}
