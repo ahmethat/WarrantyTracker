@@ -30,6 +30,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "edit": MessageLookupByLibrary.simpleMessage("Edit"),
         "add": MessageLookupByLibrary.simpleMessage("Add"),
         "model": MessageLookupByLibrary.simpleMessage("Model"),
+        "addWarrantyImage":
+            MessageLookupByLibrary.simpleMessage("Add Warranty Image"),
         "no": MessageLookupByLibrary.simpleMessage("No"),
         "noProducts":
             MessageLookupByLibrary.simpleMessage("No products added yet."),

@@ -320,6 +320,16 @@ class S {
     );
   }
 
+  /// `Add Warranty Image`
+  String get addWarrantyImage {
+    return Intl.message(
+      'Add Warranty Image',
+      name: 'addWarrantyImage',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Purchase Date (DD/MM/YYYY)`
   String get purchaseDate {
     return Intl.message(

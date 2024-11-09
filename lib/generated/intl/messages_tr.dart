@@ -30,6 +30,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "edit": MessageLookupByLibrary.simpleMessage("Düzenle"),
         "add": MessageLookupByLibrary.simpleMessage("Ekle"),
         "model": MessageLookupByLibrary.simpleMessage("Model"),
+        "addWarrantyImage": MessageLookupByLibrary.simpleMessage(
+            "Garanti Belgesi Resmini Ekle"),
         "no": MessageLookupByLibrary.simpleMessage("Hayır"),
         "noProducts":
             MessageLookupByLibrary.simpleMessage("Henüz ürün eklenmedi."),

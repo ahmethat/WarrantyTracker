@@ -2,22 +2,31 @@ import 'package:flutter/material.dart';
 import 'models/product.dart';
 import 'db/database.dart';
 import 'generated/l10n.dart';
+import 'dart:io'; // Dosya işlemleri için
+import 'package:image_picker/image_picker.dart';
 // import 'package:intl/intl.dart'; // Tarih formatlaması için
 
-class AddProductScreen extends StatelessWidget {
+class AddProductScreen extends StatefulWidget {
   final Function onProductAdded;
-  final _formKey = GlobalKey<FormState>();
 
   AddProductScreen({required this.onProductAdded});
 
   @override
-  Widget build(BuildContext context) {
-    final nameController = TextEditingController();
-    final brandController = TextEditingController();
-    final modelController = TextEditingController();
-    final purchaseDateController = TextEditingController();
-    final warrantyEndDateController = TextEditingController();
+  _AddProductScreenState createState() => _AddProductScreenState();
+}
 
+class _AddProductScreenState extends State<AddProductScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final ImagePicker _picker = ImagePicker();
+  final nameController = TextEditingController();
+  final brandController = TextEditingController();
+  final modelController = TextEditingController();
+  final purchaseDateController = TextEditingController();
+  final warrantyEndDateController = TextEditingController();
+  String? warrantyImagePath;
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(S.of(context).newProductAdd)),
       body: Padding(
@@ -62,20 +71,22 @@ class AddProductScreen extends StatelessWidget {
               ),
               TextFormField(
                 controller: purchaseDateController,
+                readOnly: true, // Klavye açılmasını engeller
                 decoration:
                     InputDecoration(labelText: '${S.of(context).purchaseDate}'),
-                keyboardType: TextInputType.number,
-                onChanged: (value) {
-                  if (value.length == 2 && !value.endsWith('/')) {
-                    purchaseDateController.text = '$value/';
-                    purchaseDateController.selection =
-                        TextSelection.fromPosition(TextPosition(
-                            offset: purchaseDateController.text.length));
-                  } else if (value.length == 5 && !value.endsWith('/')) {
-                    purchaseDateController.text = '$value/';
-                    purchaseDateController.selection =
-                        TextSelection.fromPosition(TextPosition(
-                            offset: purchaseDateController.text.length));
+                onTap: () async {
+                  DateTime? pickedDate = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime(2000), // Başlangıç tarihi
+                    lastDate: DateTime(2101), // Bitiş tarihi
+                  );
+                  if (pickedDate != null) {
+                    // Tarih seçildiyse, formatını düzenleyip TextFormField'a yazdır
+                    purchaseDateController.text =
+                        "${pickedDate.day.toString().padLeft(2, '0')}/"
+                        "${pickedDate.month.toString().padLeft(2, '0')}/"
+                        "${pickedDate.year}";
                   }
                 },
                 validator: (value) {
@@ -91,20 +102,21 @@ class AddProductScreen extends StatelessWidget {
               ),
               TextFormField(
                 controller: warrantyEndDateController,
+                readOnly: true,
                 decoration: InputDecoration(
                     labelText: '${S.of(context).warrantyEndDate}'),
-                keyboardType: TextInputType.number,
-                onChanged: (value) {
-                  if (value.length == 2 && !value.endsWith('/')) {
-                    warrantyEndDateController.text = '$value/';
-                    warrantyEndDateController.selection =
-                        TextSelection.fromPosition(TextPosition(
-                            offset: warrantyEndDateController.text.length));
-                  } else if (value.length == 5 && !value.endsWith('/')) {
-                    warrantyEndDateController.text = '$value/';
-                    warrantyEndDateController.selection =
-                        TextSelection.fromPosition(TextPosition(
-                            offset: warrantyEndDateController.text.length));
+                onTap: () async {
+                  DateTime? pickedDate = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2101),
+                  );
+                  if (pickedDate != null) {
+                    warrantyEndDateController.text =
+                        "${pickedDate.day.toString().padLeft(2, '0')}/"
+                        "${pickedDate.month.toString().padLeft(2, '0')}/"
+                        "${pickedDate.year}";
                   }
                 },
                 validator: (value) {
@@ -153,6 +165,39 @@ class AddProductScreen extends StatelessWidget {
                   return null;
                 },
               ),
+              SizedBox(height: 16),
+              GestureDetector(
+                onTap: () async {
+                  final pickedFile =
+                      await _picker.pickImage(source: ImageSource.gallery);
+                  if (pickedFile != null) {
+                    setState(() {
+                      warrantyImagePath = pickedFile.path;
+                    });
+                  }
+                },
+                child: Container(
+                  width: double.infinity,
+                  height: 150,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: Colors.grey),
+                  ),
+                  child: warrantyImagePath == null
+                      ? Center(
+                          child: Text(S.of(context).addWarrantyImage,
+                              style: TextStyle(color: Colors.grey[600])),
+                        )
+                      : ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Image.file(
+                            File(warrantyImagePath!),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                ),
+              ),
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () async {
@@ -187,11 +232,12 @@ class AddProductScreen extends StatelessWidget {
                       model: modelController.text,
                       purchaseDate: purchaseDate,
                       warrantyEndDate: warrantyEndDate,
+                      warrantyImage: warrantyImagePath,
                     );
 
                     final dbHelper = DatabaseHelper();
                     await dbHelper.insertProduct(newProduct);
-                    onProductAdded();
+                    widget.onProductAdded();
                     Navigator.pop(context);
                   }
                 },

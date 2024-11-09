@@ -8,6 +8,7 @@ import 'add_product_screen.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'l10n/app_localizations.dart';
 import 'generated/l10n.dart';
+import 'dart:io';
 
 void main() {
   runApp(WarrantyTrackerApp());
@@ -515,8 +516,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   // Garanti süresini hesaplama fonksiyonu
   void _calculateWarrantyDuration() {
     if (product.purchaseDate != null && product.warrantyEndDate != null) {
-      final difference =
-          product.warrantyEndDate.difference(product.purchaseDate);
+      // final difference =
+      //     product.warrantyEndDate.difference(product.purchaseDate);
+      final difference = product.warrantyEndDate.difference(DateTime.now());
 
       final years = difference.inDays ~/ 365; // Yıl
       final months = (difference.inDays % 365) ~/ 30; // Ay
@@ -582,6 +584,42 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               Text(
                 '${S.of(context).remainingWarranty}: $warrantyDuration',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+            ],
+            SizedBox(height: 2),
+            // Fotoğraf gösterme alanı
+            if (product.warrantyImage != null) ...[
+              SizedBox(height: 16),
+              Text("deneme",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              SizedBox(height: 10),
+              Container(
+                width: double.infinity,
+                height: 200,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => FullScreenImageScreen(
+                            imageFile: File(product.warrantyImage!),
+                          ),
+                        ),
+                      );
+                    },
+                    child: Image.file(
+                      File(product.warrantyImage!),
+                      width: 100,
+                      height: 100,
+                    ),
+                  ),
+                ),
               ),
             ],
             SizedBox(height: 30),
@@ -655,6 +693,31 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         builder: (context) => EditProductScreen(
           product: product,
           onProductUpdated: widget.onProductUpdated,
+        ),
+      ),
+    );
+  }
+}
+
+class FullScreenImageScreen extends StatelessWidget {
+  final File imageFile;
+
+  FullScreenImageScreen({required this.imageFile});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        iconTheme: IconThemeData(color: Colors.white),
+      ),
+      body: Center(
+        child: InteractiveViewer(
+          panEnabled: true,
+          minScale: 0.5,
+          maxScale: 4.0,
+          child: Image.file(imageFile),
         ),
       ),
     );
@@ -795,17 +858,46 @@ class _EditProductScreenState extends State<EditProductScreen> {
               ),
               TextFormField(
                 controller: purchaseDateController,
+                readOnly: true,
                 decoration:
                     InputDecoration(labelText: '${S.of(context).purchaseDate}'),
-                keyboardType: TextInputType.number,
+                onTap: () async {
+                  DateTime? pickedDate = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime(2000), // Başlangıç tarihi
+                    lastDate: DateTime(2101), // Bitiş tarihi
+                  );
+                  if (pickedDate != null) {
+                    // Tarih seçildiyse, formatını düzenleyip TextFormField'a yazdır
+                    purchaseDateController.text =
+                        "${pickedDate.day.toString().padLeft(2, '0')}/"
+                        "${pickedDate.month.toString().padLeft(2, '0')}/"
+                        "${pickedDate.year}";
+                  }
+                },
                 validator: (value) => _validateAndCompareDates(
                     value, S.of(context).purchaseDateEmpty),
               ),
               TextFormField(
                 controller: warrantyEndDateController,
+                readOnly: true,
                 decoration: InputDecoration(
                     labelText: '${S.of(context).warrantyEndDate}'),
-                keyboardType: TextInputType.number,
+                onTap: () async {
+                  DateTime? pickedDate = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2101),
+                  );
+                  if (pickedDate != null) {
+                    warrantyEndDateController.text =
+                        "${pickedDate.day.toString().padLeft(2, '0')}/"
+                        "${pickedDate.month.toString().padLeft(2, '0')}/"
+                        "${pickedDate.year}";
+                  }
+                },
                 validator: (value) => _validateAndCompareDates(
                     value, S.of(context).warrantyDateEmpty),
               ),
