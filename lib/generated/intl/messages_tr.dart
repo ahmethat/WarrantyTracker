@@ -33,6 +33,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "addWarrantyImage": MessageLookupByLibrary.simpleMessage(
             "Garanti Belgesi Resmini Ekle"),
         "no": MessageLookupByLibrary.simpleMessage("Hayır"),
+        "image": MessageLookupByLibrary.simpleMessage("Garanti Belgesi"),
         "noProducts":
             MessageLookupByLibrary.simpleMessage("Henüz ürün eklenmedi."),
         "productDetail": MessageLookupByLibrary.simpleMessage("Ürün Detayları"),

@@ -590,7 +590,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             // Fotoğraf gösterme alanı
             if (product.warrantyImage != null) ...[
               SizedBox(height: 16),
-              Text("deneme",
+              Text('${S.of(context).image}',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               SizedBox(height: 10),
               Container(

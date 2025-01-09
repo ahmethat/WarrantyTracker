@@ -33,6 +33,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "addWarrantyImage":
             MessageLookupByLibrary.simpleMessage("Add Warranty Image"),
         "no": MessageLookupByLibrary.simpleMessage("No"),
+        "image": MessageLookupByLibrary.simpleMessage("Warranty Certificate"),
         "noProducts":
             MessageLookupByLibrary.simpleMessage("No products added yet."),
         "productDetail": MessageLookupByLibrary.simpleMessage("Product Detail"),

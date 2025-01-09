@@ -330,6 +330,16 @@ class S {
     );
   }
 
+  /// `Warranty Certificate`
+  String get image {
+    return Intl.message(
+      'Warranty Certificate',
+      name: 'image',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Purchase Date (DD/MM/YYYY)`
   String get purchaseDate {
     return Intl.message(
